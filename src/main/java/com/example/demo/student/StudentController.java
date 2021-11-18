@@ -8,11 +8,15 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
+import static com.example.demo.student.StudentController.apiPath;
+
 @RestController
-@RequestMapping(path = "api/v1/student")
+@RequestMapping(path = apiPath)
 public class StudentController {
 
     private final StudentService studentService;
+    public static final String apiPath = "api/v1/student";
+
     @Autowired
     public StudentController(StudentService studentService) {
 
