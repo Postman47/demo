@@ -28,7 +28,7 @@ public class Student {
     private String email;
     @Getter @Setter
     private LocalDate dateOfBirth;
-    @Transient
+    @Transient @Getter @Setter
     private Integer age;
 
     public Student() {
@@ -40,13 +40,9 @@ public class Student {
         this.name = name;
         this.email = email;
         this.dateOfBirth = dateOfBirth;
+        this.age = Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
-
-    public Integer getAge() {
-
-        return Period.between(dateOfBirth, LocalDate.now()).getYears();
-    }
-
+    
     @Override
     public String toString() {
         return "Student{" +
