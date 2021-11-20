@@ -29,10 +29,6 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<List> getStudent(){
 
-        if(studentService.getStudents().isEmpty()){
-            
-        }
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(studentService.getStudents());
 
