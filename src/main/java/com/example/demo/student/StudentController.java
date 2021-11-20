@@ -1,6 +1,8 @@
 package com.example.demo.student;
 
 
+import com.example.demo.student.exceptions.EmailTakenException;
+import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,12 +37,12 @@ public class StudentController {
     }
 
     @PostMapping
-    public void registerNewStudent(@RequestBody Student student){
+    public void registerNewStudent(@RequestBody Student student) throws EmailTakenException {
         studentService.addNewStudent(student);
     }
 
     @DeleteMapping(path = "{studentId}")
-    public void deleteStudent(@PathVariable("studentId") Long studentId){
+    public void deleteStudent(@PathVariable("studentId") Long studentId) throws StudentDoesNotExistException {
         studentService.deleteStudent(studentId);
     }
 
@@ -48,7 +50,7 @@ public class StudentController {
     public void updateStudent(
             @PathVariable("studentId") Long studentId,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email) {
+            @RequestParam(required = false) String email) throws StudentDoesNotExistException, EmailTakenException {
                 studentService.updateStudent(studentId, name, email);
     }
 
