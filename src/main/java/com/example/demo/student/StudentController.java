@@ -2,6 +2,9 @@ package com.example.demo.student;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -24,9 +27,15 @@ public class StudentController {
     }
 
     @GetMapping
-    public List<Student> getStudent(){
+    public ResponseEntity<List> getStudent(){
 
-        return studentService.getStudents();
+        if(studentService.getStudents().isEmpty()){
+            
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(studentService.getStudents());
+
     }
 
     @PostMapping
