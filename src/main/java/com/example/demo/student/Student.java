@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.Period;
 
 @Entity
@@ -28,7 +29,7 @@ public class Student {
     private String email;
     @Getter @Setter
     private LocalDate dateOfBirth;
-    @Transient @Getter @Setter
+  @Getter @Setter
     private Integer age;
 
 
@@ -55,4 +56,7 @@ public class Student {
                 ", age=" + age +
                 '}';
     }
+
 }
+
+

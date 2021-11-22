@@ -20,6 +20,8 @@ public class StudentConfig {
                     LocalDate.of(2000, Month.JANUARY, 4)
             );
 
+            System.out.println(piotr.getAge());
+
             Student jan = new Student(
                     "Jan",
                     "jan789@gmail.com",
