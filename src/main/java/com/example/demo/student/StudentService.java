@@ -24,9 +24,14 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void addNewStudent(Student student) throws EmailTakenException {
-        checkEmail(student);
-        studentRepository.save(student);
+    public void addNewStudent(Student student) {
+        try {
+            checkEmail(student);
+            studentRepository.save(student);
+        }catch (EmailTakenException e){
+            throw new IllegalArgumentException(e.getErrorEmailTaken());
+        }
+
     }
 
     public void deleteStudent(Long studentId) throws StudentDoesNotExistException {
@@ -38,7 +43,7 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateStudent(Long studentId, String name, String email) throws StudentDoesNotExistException, EmailTakenException {
+    public void updateStudent(Long studentId, String name, String email) throws StudentDoesNotExistException {
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(studentId));
 
         if(name != null && name.length() > 0 && !Objects.equals(student.getName(), name)){
@@ -46,8 +51,12 @@ public class StudentService {
         }
 
         if (email != null && email.length() > 0 && !Objects.equals(student.getEmail(), email)){
-            checkEmail(student);
-            student.setEmail(email);
+            try{
+                checkEmail(student);
+                student.setEmail(email);
+            }catch (EmailTakenException e){
+                throw new IllegalArgumentException(e.getErrorEmailTaken());
+            }
         }
     }
 

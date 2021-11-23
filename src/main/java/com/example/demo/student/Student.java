@@ -29,7 +29,7 @@ public class Student {
     private String email;
     @Getter @Setter
     private LocalDate dateOfBirth;
-  @Getter @Setter
+    @Getter @Setter
     private Integer age;
 
 
