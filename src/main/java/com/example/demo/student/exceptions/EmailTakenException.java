@@ -2,8 +2,10 @@ package com.example.demo.student.exceptions;
 
 public class EmailTakenException extends Exception{
 
-    public EmailTakenException(String errorMessage){
-        super(errorMessage);
+    public static final String errorEmailTaken = "Error email arleady taken";
+
+    public EmailTakenException(){
+        super(errorEmailTaken);
     }
 
 }

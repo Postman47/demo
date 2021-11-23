@@ -34,6 +34,7 @@ class StudentServiceTest {
     }
 
     @Test
+
     void canAddNewStudent() {
         //given
         Student student = new Student(
@@ -42,11 +43,6 @@ class StudentServiceTest {
                 LocalDate.of(1993, Month.DECEMBER, 17)
         );
         //when
-        try {
-            underTest.addNewStudent(student);
-        }catch (EmailTakenException e){
-            
-        }
     }
 
     @Test

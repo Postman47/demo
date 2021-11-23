@@ -1,7 +1,10 @@
 package com.example.demo.student.exceptions;
 
 public class StudentDoesNotExistException extends Exception{
-    public StudentDoesNotExistException(String errorMessage, Long studentId){
-        super(errorMessage + studentId);
+
+    public static final String errorStudentWithIdDoesNotExist = "Error there is no student with id ";
+
+    public StudentDoesNotExistException(Long studentId){
+        super(errorStudentWithIdDoesNotExist + studentId);
     }
 }

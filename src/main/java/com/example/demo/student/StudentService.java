@@ -14,8 +14,6 @@ import java.util.Optional;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    public static final String errorEmailTaken = "Error email arleady taken";
-    public static final String errorStudentWithIdDoesNotExist = "Error there is no student with id ";
 
     @Autowired
     public StudentService(StudentRepository studentRepository) {
@@ -34,14 +32,14 @@ public class StudentService {
     public void deleteStudent(Long studentId) throws StudentDoesNotExistException {
         boolean exists = studentRepository.existsById(studentId);
         if(!exists){
-            throw new StudentDoesNotExistException(errorStudentWithIdDoesNotExist,studentId);
+            throw new StudentDoesNotExistException(studentId);
         }
         studentRepository.deleteById(studentId);
     }
 
     @Transactional
     public void updateStudent(Long studentId, String name, String email) throws StudentDoesNotExistException, EmailTakenException {
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(errorStudentWithIdDoesNotExist,studentId));
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(studentId));
 
         if(name != null && name.length() > 0 && !Objects.equals(student.getName(), name)){
             student.setName(name);
@@ -56,7 +54,7 @@ public class StudentService {
     public void checkEmail(Student student) throws EmailTakenException {
         Optional<Student> studentOptional = studentRepository.findStudentByEmail(student.getEmail());
         if (studentOptional.isPresent()){
-            throw new EmailTakenException(errorEmailTaken);
+            throw new EmailTakenException();
         }
     }
 }
