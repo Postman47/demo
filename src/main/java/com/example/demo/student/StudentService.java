@@ -25,45 +25,37 @@ public class StudentService {
     }
 
     public void addNewStudent(Student student) {
-        try {
-            checkEmail(student);
-            studentRepository.save(student);
-        }catch (EmailTakenException e){
-            throw new IllegalArgumentException(e.getErrorEmailTaken());
-        }
+        checkEmail(student);
+        studentRepository.save(student);
 
     }
 
     public void deleteStudent(Long studentId) throws StudentDoesNotExistException {
         boolean exists = studentRepository.existsById(studentId);
         if(!exists){
-            throw new StudentDoesNotExistException(studentId);
+            throw new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId);
         }
         studentRepository.deleteById(studentId);
     }
 
     @Transactional
     public void updateStudent(Long studentId, String name, String email) throws StudentDoesNotExistException {
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(studentId));
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId));
 
         if(name != null && name.length() > 0 && !Objects.equals(student.getName(), name)){
             student.setName(name);
         }
 
         if (email != null && email.length() > 0 && !Objects.equals(student.getEmail(), email)){
-            try{
-                checkEmail(student);
-                student.setEmail(email);
-            }catch (EmailTakenException e){
-                throw new IllegalArgumentException(e.getErrorEmailTaken());
-            }
+            checkEmail(student);
+            student.setEmail(email);
         }
     }
 
-    public void checkEmail(Student student) throws EmailTakenException {
+    public void checkEmail(Student student) {
         Optional<Student> studentOptional = studentRepository.findStudentByEmail(student.getEmail());
         if (studentOptional.isPresent()){
-            throw new EmailTakenException();
+            throw new EmailTakenException(EmailTakenException.EMAIL_TAKEN_EXCEPTION);
         }
     }
 }

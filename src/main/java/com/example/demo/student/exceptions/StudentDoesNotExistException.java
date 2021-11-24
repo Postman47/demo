@@ -1,10 +1,13 @@
 package com.example.demo.student.exceptions;
 
-public class StudentDoesNotExistException extends Exception{
+public class StudentDoesNotExistException extends RuntimeException{
 
-    public static final String errorStudentWithIdDoesNotExist = "Error there is no student with id ";
+    public static final String ERROR_THERE_IS_NO_STUDENT_WITH_ID = "Error there is no student with id ";
 
-    public StudentDoesNotExistException(Long studentId){
-        super(errorStudentWithIdDoesNotExist + studentId);
+    public StudentDoesNotExistException() {
+    }
+
+    public StudentDoesNotExistException(String message) {
+        super(message);
     }
 }

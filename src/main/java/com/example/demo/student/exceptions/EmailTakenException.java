@@ -1,14 +1,15 @@
 package com.example.demo.student.exceptions;
 
-import lombok.Getter;
 
-public class EmailTakenException extends Exception{
+public class EmailTakenException extends RuntimeException{
 
-    @Getter
-    public static final String errorEmailTaken = "Error email arleady taken";
+    public static final String EMAIL_TAKEN_EXCEPTION = "Error email arleady taken";
 
     public EmailTakenException(){
-        super(errorEmailTaken);
+
     }
 
+    public EmailTakenException(String message) {
+        super(message);
+    }
 }
