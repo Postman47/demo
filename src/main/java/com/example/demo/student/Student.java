@@ -5,7 +5,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.Period;
 
 @Entity
@@ -29,7 +28,7 @@ public class Student {
     private String email;
     @Getter @Setter
     private LocalDate dateOfBirth;
-  @Getter @Setter
+    @Getter @Setter
     private Integer age;
 
 
@@ -40,6 +39,17 @@ public class Student {
     public Student(String name,
                    String email,
                    LocalDate dateOfBirth) {
+        this.name = name;
+        this.email = email;
+        this.dateOfBirth = dateOfBirth;
+        this.age = Period.between(dateOfBirth, LocalDate.now()).getYears();
+    }
+
+    //only for testing
+    public Student(Long id,String name,
+                   String email,
+                   LocalDate dateOfBirth) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.dateOfBirth = dateOfBirth;

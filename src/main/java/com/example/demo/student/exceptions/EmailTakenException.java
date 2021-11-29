@@ -1,9 +1,15 @@
 package com.example.demo.student.exceptions;
 
-public class EmailTakenException extends Exception{
 
-    public EmailTakenException(String errorMessage){
-        super(errorMessage);
+public class EmailTakenException extends RuntimeException{
+
+    public static final String EMAIL_TAKEN_EXCEPTION = "Error email arleady taken";
+
+    public EmailTakenException(){
+
     }
 
+    public EmailTakenException(String message) {
+        super(message);
+    }
 }

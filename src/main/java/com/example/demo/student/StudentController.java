@@ -37,7 +37,7 @@ public class StudentController {
     }
 
     @PostMapping
-    public void registerNewStudent(@RequestBody Student student) throws EmailTakenException {
+    public void registerNewStudent(@RequestBody Student student) {
         studentService.addNewStudent(student);
     }
 
@@ -50,7 +50,7 @@ public class StudentController {
     public void updateStudent(
             @PathVariable("studentId") Long studentId,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email) throws StudentDoesNotExistException, EmailTakenException {
+            @RequestParam(required = false) String email) throws StudentDoesNotExistException{
                 studentService.updateStudent(studentId, name, email);
     }
 
