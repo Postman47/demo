@@ -1,16 +1,14 @@
 package com.example.demo.student;
 
 
-import com.example.demo.student.exceptions.EmailTakenException;
+
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.Month;
+
 import java.util.List;
 
 import static com.example.demo.student.StudentController.apiPath;
@@ -31,8 +29,7 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<List> getStudent(){
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(studentService.getStudents());
+        return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudents());
 
     }
 
