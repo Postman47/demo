@@ -30,7 +30,7 @@ public class StudentService {
 
     }
 
-    public void deleteStudent(Long studentId) throws StudentDoesNotExistException {
+    public void deleteStudent(Long studentId) {
         boolean exists = studentRepository.existsById(studentId);
         if(!exists){
             throw new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId);
@@ -39,7 +39,7 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateStudent(Long studentId, String name, String email) throws StudentDoesNotExistException {
+    public void updateStudent(Long studentId, String name, String email) {
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId));
 
         if(name != null && name.length() > 0 && !Objects.equals(student.getName(), name)){
