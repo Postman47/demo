@@ -35,7 +35,8 @@ public class StudentController {
 
     @PostMapping
     public void registerNewStudent(@RequestBody Student student) {
-        studentService.addNewStudent(student);
+        Student addStudent = new Student(student.getName(),student.getEmail(),student.getDateOfBirth());
+        studentService.addNewStudent(addStudent);
     }
 
     @DeleteMapping(path = "{studentId}")

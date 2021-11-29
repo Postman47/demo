@@ -87,7 +87,7 @@ class StudentServiceTest {
         underTest.addNewStudent(student);
         given(studentRepository.existsById(any())).willReturn(false);
         //then
-        assertThatThrownBy(() -> underTest.deleteStudent(student.getId())).hasMessageContaining(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + student.getId());
+        assertThatThrownBy(() -> underTest.deleteStudent(student.getSId())).hasMessageContaining(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + student.getSId());
         verify(studentRepository, never()).deleteById(any());
     }
 

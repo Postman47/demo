@@ -6,6 +6,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
+import java.util.Set;
+
 
 @Entity
 @Table
@@ -21,16 +24,22 @@ public class Student {
             generator = "student_sequence"
     )
     @Getter @Setter
-    private Long id;
+    private Long sId;
     @Getter @Setter
     private String name;
     @Getter @Setter
     private String email;
     @Getter @Setter
     private LocalDate dateOfBirth;
-    @Getter @Setter
+    @Setter
+    @GeneratedValue
     private Integer age;
 
+//    @ManyToMany
+//    @JoinTable(
+//            name = "student_course"
+//    )
+//    private Set<Course> courses;
 
 
     public Student() {
@@ -45,11 +54,11 @@ public class Student {
         this.age = Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
 
-    //only for testing
-    public Student(Long id,String name,
+//    only for testing
+    public Student(Long sId, String name,
                    String email,
                    LocalDate dateOfBirth) {
-        this.id = id;
+        this.sId = sId;
         this.name = name;
         this.email = email;
         this.dateOfBirth = dateOfBirth;
@@ -59,7 +68,7 @@ public class Student {
     @Override
     public String toString() {
         return "Student{" +
-                "id=" + id +
+                "id=" + sId +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", dob=" + dateOfBirth +
@@ -67,6 +76,9 @@ public class Student {
                 '}';
     }
 
+    public Integer getAge() {
+        return Period.between(dateOfBirth, LocalDate.now()).getYears();
+    }
 }
 
 
