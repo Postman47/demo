@@ -102,10 +102,14 @@ class StudentServiceTest {
         );
         //when
         Long idTest = 1L;
-        String nameTest = "Emilia";
-        String emailTest = "emilia12@hmail.com";
+        String expectedName = "Emilia";
+        String expectedEmail = "emilia12@hmail.com";
         given(studentRepository.findById(any())).willReturn(Optional.of(student));
-        underTest.updateStudent(idTest,nameTest,emailTest);
+        underTest.updateStudent(idTest,expectedName,expectedEmail);
+
+        //then
+        assertThat(student.getEmail()).isEqualTo(expectedEmail);
+        assertThat(student.getName()).isEqualTo(expectedName);
 
     }
 
