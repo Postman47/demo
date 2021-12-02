@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.demo.student.StudentController.apiPath;
+import static com.example.demo.student.StudentController.studentPath;
 
 @RestController
-@RequestMapping(path = apiPath)
+@RequestMapping(path = studentPath)
 public class StudentController {
 
     private final StudentService studentService;
-    public static final String apiPath = "api/v1/student";
+    public static final String studentPath = "api/v1/student";
 
     @Autowired
     public StudentController(StudentService studentService) {
