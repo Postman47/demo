@@ -31,7 +31,7 @@ public class Course {
     private Integer maxNumberOfStudents;
     @Getter@Setter
     private Boolean mandatory;
-
+    @Getter
     @ManyToMany(mappedBy = "courses")
     private Set<Student> student;
 

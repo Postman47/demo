@@ -7,7 +7,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -35,13 +36,14 @@ public class Student {
     @GeneratedValue
     private Integer age;
 
+    @Getter
     @ManyToMany
     @JoinTable(
             name = "student_course",
             joinColumns = @JoinColumn(name = "sId"),
             inverseJoinColumns = @JoinColumn(name = "cId")
     )
-    private Set<Course> courses;
+    private List<Course> courses = new ArrayList<>();
 
 
     public Student() {

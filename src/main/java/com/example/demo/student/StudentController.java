@@ -2,6 +2,7 @@ package com.example.demo.student;
 
 
 
+import com.example.demo.course.exceptions.CourseDoesNotExistException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Set;
 
 import static com.example.demo.student.StudentController.studentPath;
 
@@ -52,5 +54,15 @@ public class StudentController {
                 studentService.updateStudent(studentId, name, email);
     }
 
+    @PutMapping
+    public void signStudentForCourse(
+            @RequestParam Long studentId,
+            @RequestParam String courseName) throws StudentDoesNotExistException, CourseDoesNotExistException{
+        studentService.signStudentForCourse(studentId, courseName);
+    }
 
+    @GetMapping(path = "{studentId}")
+    public ResponseEntity<List> getStudentCourses(@PathVariable Long studentId){
+        return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudentCourses(studentId));
+    }
 }

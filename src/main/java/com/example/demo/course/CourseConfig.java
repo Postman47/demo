@@ -12,7 +12,7 @@ public class CourseConfig {
     CommandLineRunner courseCommandLineRunner(CourseRepository repository){
         return args -> {
             Course analiza = new Course(
-                    "Analiza Matematyczna 1",
+                    "Analiza_Matematyczna_1",
                     4,
                     100,
                     true
@@ -21,7 +21,7 @@ public class CourseConfig {
             Course algebra = new Course(
                     "Algebra",
                     5,
-                    100,
+                    1,
                     true
             );
 
