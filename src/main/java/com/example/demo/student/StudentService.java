@@ -7,6 +7,7 @@ import com.example.demo.course.exceptions.CourseDoesNotExistException;
 import com.example.demo.course.exceptions.TooManyStudentsException;
 import com.example.demo.student.exceptions.EmailTakenException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
+@Data
 public class StudentService {
 
     private final StudentRepository studentRepository;

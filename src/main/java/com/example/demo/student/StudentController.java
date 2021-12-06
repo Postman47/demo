@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.demo.Constant.*;
 
@@ -44,9 +45,16 @@ public class StudentController {
     }
 
     @PostMapping
-    public void registerNewStudent(@RequestBody Student student) {
+    public ResponseEntity<String> registerNewStudent(@RequestBody Student student) {
         Student addStudent = new Student(student.getName(),student.getEmail(),student.getDateOfBirth());
         studentService.addNewStudent(addStudent);
+
+        Optional<Student> studentOptional = studentService.getStudentRepository().findStudentByEmail(student.getEmail());
+        if(studentOptional.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, STUDENT_NOT_REGISTERED_MESSAGE);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(NEW_STUDENT_HAS_BEEN_REGISTERED_MESSAGE + addStudent.getName());
+        }
     }
 
     @DeleteMapping(path = "{studentId}")
