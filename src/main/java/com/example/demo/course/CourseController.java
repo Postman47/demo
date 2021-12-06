@@ -8,15 +8,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.example.demo.course.CourseController.coursePath;
-
+import static com.example.demo.Constant.coursePath;
 
 @RestController
 @RequestMapping(path = coursePath)
 public class CourseController {
 
     private final CourseService courseService;
-    public static final String coursePath = "api/v1/course";
 
     @Autowired
     public CourseController(CourseService courseService) {

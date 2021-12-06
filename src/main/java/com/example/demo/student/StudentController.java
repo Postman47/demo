@@ -2,25 +2,26 @@ package com.example.demo.student;
 
 
 
+import com.example.demo.course.Course;
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.List;
-import java.util.Set;
 
-import static com.example.demo.student.StudentController.studentPath;
+import static com.example.demo.Constant.*;
+
 
 @RestController
 @RequestMapping(path = studentPath)
 public class StudentController {
 
     private final StudentService studentService;
-    public static final String studentPath = "api/v1/student";
 
     @Autowired
     public StudentController(StudentService studentService) {
@@ -29,9 +30,16 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<List> getStudent(){
+    public ResponseEntity<List<Student>> getStudent(){
 
-        return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudents());
+        List<Student> response = studentService.getStudents();
+        if (response.equals(null)) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, NO_CONTENT_EXCEPTION_MESSAGE);
+        }else if(response != studentService.getStudents()){
+            throw new ResponseStatusException(HttpStatus.PARTIAL_CONTENT, PARTIAL_CONTENT_EXCEPTION_MESSAGE);
+        }else {
+            return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudents());
+        }
 
     }
 
@@ -62,7 +70,7 @@ public class StudentController {
     }
 
     @GetMapping(path = "{studentId}")
-    public ResponseEntity<List> getStudentCourses(@PathVariable Long studentId){
+    public ResponseEntity<List<String>> getStudentCourses(@PathVariable Long studentId){
         return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudentCourses(studentId));
     }
 }
