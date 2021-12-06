@@ -19,8 +19,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
@@ -97,16 +96,15 @@ class StudentServiceTest {
     void canUpdateStudent() {
         //given
         Student student = new Student(
-                1L,
                 "Hanna",
                 "hanna23@gmail.com",
                 LocalDate.of(1993, Month.DECEMBER, 17)
         );
         //when
         Long idTest = 1L;
+        doReturn(Optional.of(student)).when(studentRepository).findById(idTest);
         String expectedName = "Emilia";
         String expectedEmail = "emilia12@hmail.com";
-        given(studentRepository.findById(any())).willReturn(Optional.of(student));
         underTest.updateStudent(idTest,expectedName,expectedEmail);
 
         //then

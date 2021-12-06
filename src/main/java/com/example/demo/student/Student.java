@@ -1,8 +1,7 @@
 package com.example.demo.student;
 
 import com.example.demo.course.Course;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Table
+@Data
 public class Student {
     @Id
     @SequenceGenerator(
@@ -24,19 +24,12 @@ public class Student {
             strategy = GenerationType.SEQUENCE,
             generator = "student_sequence"
     )
-    @Getter @Setter
     private Long sId;
-    @Getter @Setter
     private String name;
-    @Getter @Setter
     private String email;
-    @Getter @Setter
     private LocalDate dateOfBirth;
-    @Setter
-    @GeneratedValue
     private Integer age;
 
-    @Getter
     @ManyToMany
     @JoinTable(
             name = "student_course",
@@ -58,17 +51,6 @@ public class Student {
         this.age = Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
 
-//    only for testing
-    public Student(Long sId, String name,
-                   String email,
-                   LocalDate dateOfBirth) {
-        this.sId = sId;
-        this.name = name;
-        this.email = email;
-        this.dateOfBirth = dateOfBirth;
-        this.age = Period.between(dateOfBirth, LocalDate.now()).getYears();
-    }
-
     @Override
     public String toString() {
         return "Student{" +
@@ -80,9 +62,6 @@ public class Student {
                 '}';
     }
 
-    public Integer getAge() {
-        return Period.between(dateOfBirth, LocalDate.now()).getYears();
-    }
 }
 
 
