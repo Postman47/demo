@@ -1,8 +1,13 @@
 package com.example.demo.course;
 
+import com.example.demo.course.exceptions.CourseAlreadyTakenException;
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
 import com.example.demo.course.exceptions.NameTakenException;
 
+import com.example.demo.course.exceptions.TooManyStudentsException;
+import com.example.demo.student.Student;
+import com.example.demo.student.StudentRepository;
+import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +20,12 @@ import java.util.Optional;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final StudentRepository studentRepository;
 
     @Autowired
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository, StudentRepository studentRepository) {
         this.courseRepository = courseRepository;
+        this.studentRepository = studentRepository;
     }
 
     public List<Course> getCourses(){
@@ -26,7 +33,7 @@ public class CourseService {
     }
 
     public void addNewCourse(Course course) {
-        checkName(course);
+        checkIfNameTaken(course);
         courseRepository.save(course);
 
     }
@@ -43,15 +50,15 @@ public class CourseService {
     public void updateCourse(Long courseId,String name, Integer amountOfPoints, Integer maxNumberOfStudents, Boolean mandatory) {
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new CourseDoesNotExistException(CourseDoesNotExistException.COURSE_DO_NOT_EXIST + courseId));
 
-        if(name != null && name.length() > 0 && !Objects.equals(course.getName(), name)){
+        if(name != null && name.length() > 0 && !course.getName().equals(name)){
             course.setName(name);
         }
 
-        if(amountOfPoints != null && amountOfPoints > 0 && !Objects.equals(course.getAmountOfPoints(), amountOfPoints)){
+        if(amountOfPoints != null && amountOfPoints > 0 && !course.getAmountOfPoints().equals(amountOfPoints)){
             course.setAmountOfPoints(amountOfPoints);
         }
 
-        if(amountOfPoints != null && maxNumberOfStudents > 0 && !Objects.equals(course.getMaxNumberOfStudents(), maxNumberOfStudents)){
+        if(amountOfPoints != null && maxNumberOfStudents > 0 && !course.getMaxNumberOfStudents().equals(maxNumberOfStudents)){
             course.setMaxNumberOfStudents(maxNumberOfStudents);
         }
 
@@ -59,7 +66,22 @@ public class CourseService {
 
     }
 
-    public void checkName(Course course) {
+    @Transactional
+    public void signStudent(Long studentId , String courseName){
+
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId));
+        Course course = courseRepository.findCourseByName(courseName).orElseThrow(() -> new CourseDoesNotExistException(CourseDoesNotExistException.COURSE_DO_NOT_EXIST));
+        if(course.getStudent().size() >= course.getMaxNumberOfStudents()){
+            throw new TooManyStudentsException(TooManyStudentsException.TOO_MANY_STUDENTS);
+        }else if(!student.getCourses().contains(course)){
+            student.getCourses().add(course);
+        }else{
+            throw new CourseAlreadyTakenException(CourseAlreadyTakenException.COURSE_ALREADY_TAKEN);
+        }
+
+    }
+
+    public void checkIfNameTaken(Course course) {
         Optional<Course> courseOptional = courseRepository.findCourseByName(course.getName());
         if (courseOptional.isPresent()){
             throw new NameTakenException(NameTakenException.NAME_TAKEN_EXCEPTION);

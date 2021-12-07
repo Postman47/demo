@@ -2,9 +2,6 @@ package com.example.demo.student;
 
 import com.example.demo.course.Course;
 import com.example.demo.course.CourseRepository;
-import com.example.demo.course.exceptions.CourseAlreadyTakenException;
-import com.example.demo.course.exceptions.CourseDoesNotExistException;
-import com.example.demo.course.exceptions.TooManyStudentsException;
 import com.example.demo.student.exceptions.EmailTakenException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import lombok.Data;
@@ -32,7 +29,7 @@ public class StudentService {
     }
 
     public void addNewStudent(Student student) {
-        checkEmail(student);
+        checkIfEmailTaken(student);
         studentRepository.save(student);
 
     }
@@ -49,36 +46,21 @@ public class StudentService {
     public void updateStudent(Long studentId, String name, String email) {
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId));
 
-        if(name != null && name.length() > 0 && !Objects.equals(student.getName(), name)){
+        if(name != null && name.length() > 0 && !student.getName().equals(name)){
             student.setName(name);
         }
 
-        if (email != null && email.length() > 0 && !Objects.equals(student.getEmail(), email)){
-            checkEmail(student);
+        if (email != null && email.length() > 0 && !student.getEmail().equals(email)){
+            checkIfEmailTaken(student);
             student.setEmail(email);
         }
     }
 
-    public void checkEmail(Student student) {
+    public void checkIfEmailTaken(Student student) {
         Optional<Student> studentOptional = studentRepository.findStudentByEmail(student.getEmail());
         if (studentOptional.isPresent()){
             throw new EmailTakenException(EmailTakenException.EMAIL_TAKEN_EXCEPTION);
         }
-    }
-
-    @Transactional
-    public void signStudentForCourse(Long studentId , String courseName){
-
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId));
-        Course course = courseRepository.findCourseByName(courseName).orElseThrow(() -> new CourseDoesNotExistException(CourseDoesNotExistException.COURSE_DO_NOT_EXIST));
-        if(course.getStudent().size() >= course.getMaxNumberOfStudents()){
-            throw new TooManyStudentsException(TooManyStudentsException.TOO_MANY_STUDENTS);
-        }else if(!student.getCourses().contains(course)){
-            student.getCourses().add(course);
-        }else{
-            throw new CourseAlreadyTakenException(CourseAlreadyTakenException.COURSE_ALREADY_TAKEN);
-        }
-
     }
 
     public List<String> getStudentCourses(Long studentId){

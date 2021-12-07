@@ -83,12 +83,6 @@ public class StudentController {
                 }
     }
 
-    @PutMapping
-    public void signStudentForCourse(
-            @RequestParam Long studentId,
-            @RequestParam String courseName) throws StudentDoesNotExistException, CourseDoesNotExistException{
-        studentService.signStudentForCourse(studentId, courseName);
-    }
 
     @GetMapping(path = "{studentId}")
     public ResponseEntity<List<String>> getStudentCourses(@PathVariable Long studentId){

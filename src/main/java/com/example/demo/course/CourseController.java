@@ -1,6 +1,7 @@
 package com.example.demo.course;
 
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
+import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class CourseController {
     }
 
     @PostMapping
-    public void registerNewCourse(@RequestBody Course course) {
+    public void registerCourse(@RequestBody Course course) {
         Course addCourse = new Course(course.getName(), course.getAmountOfPoints(), course.getMaxNumberOfStudents(), course.getMandatory());
         courseService.addNewCourse(addCourse);
     }
@@ -46,5 +47,12 @@ public class CourseController {
             @RequestParam(required = false) Integer maxNumberOfStudents,
             @RequestParam(required = false) Boolean mandatory) throws CourseDoesNotExistException{
         courseService.updateCourse(courseId, name, amountOfPoints, maxNumberOfStudents, mandatory);
+    }
+
+    @PutMapping
+    public void signStudent(
+            @RequestParam Long studentId,
+            @RequestParam String courseName) throws StudentDoesNotExistException, CourseDoesNotExistException{
+        courseService.signStudent(studentId, courseName);
     }
 }

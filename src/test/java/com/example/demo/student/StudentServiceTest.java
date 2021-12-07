@@ -124,7 +124,7 @@ class StudentServiceTest {
         //when
         given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.of(student));
         //then
-        assertThatThrownBy(() -> underTest.checkEmail(student)).hasMessageContaining(EmailTakenException.EMAIL_TAKEN_EXCEPTION);
+        assertThatThrownBy(() -> underTest.checkIfEmailTaken(student)).hasMessageContaining(EmailTakenException.EMAIL_TAKEN_EXCEPTION);
 
     }
 
