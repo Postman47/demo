@@ -58,16 +58,29 @@ public class StudentController {
     }
 
     @DeleteMapping(path = "{studentId}")
-    public void deleteStudent(@PathVariable("studentId") Long studentId) throws StudentDoesNotExistException {
+    public ResponseEntity<String> deleteStudent(@PathVariable("studentId") Long studentId) throws StudentDoesNotExistException {
         studentService.deleteStudent(studentId);
+        Optional<Student> optionalStudent = studentService.getStudentRepository().findById(studentId);
+        if(optionalStudent.isPresent()){
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, STUDENT_HAS_NOT_BEEN_DELETED_MESSAGE + studentId);
+        }else{
+            return ResponseEntity.status(HttpStatus.OK).body(STUDENT_HAS_BEEN_DELETED_MESSAGE + studentId);
+        }
     }
 
     @PutMapping(path = "{studentId}")
-    public void updateStudent(
+    public ResponseEntity<String> updateStudent(
             @PathVariable("studentId") Long studentId,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email) throws StudentDoesNotExistException{
                 studentService.updateStudent(studentId, name, email);
+
+                Optional<Student> optionalStudent = studentService.getStudentRepository().findById(studentId);
+                if(optionalStudent.get().getName().equals(name) || optionalStudent.get().getEmail().equals(email)){
+                    return ResponseEntity.status(HttpStatus.OK).body(STUDENT_HAS_BEEN_UPDATED + studentId);
+                }else {
+                    throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, STUDENT_HAS_NOT_BEEN_UPDATED);
+                }
     }
 
     @PutMapping
