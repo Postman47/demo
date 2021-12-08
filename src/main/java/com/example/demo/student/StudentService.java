@@ -1,7 +1,6 @@
 package com.example.demo.student;
 
 import com.example.demo.course.Course;
-import com.example.demo.course.CourseRepository;
 import com.example.demo.student.exceptions.EmailTakenException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import lombok.Data;
@@ -16,12 +15,10 @@ import java.util.*;
 public class StudentService {
 
     private final StudentRepository studentRepository;
-    private final CourseRepository courseRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, CourseRepository courseRepository) {
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.courseRepository = courseRepository;
     }
 
     public List<Student> getStudents(){

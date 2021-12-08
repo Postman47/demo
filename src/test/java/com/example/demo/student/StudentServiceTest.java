@@ -1,6 +1,5 @@
 package com.example.demo.student;
 
-import com.example.demo.course.CourseRepository;
 import com.example.demo.student.exceptions.EmailTakenException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,13 +23,13 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
-    @Mock private StudentRepository studentRepository;
-    @Mock private CourseRepository courseRepository;
+    @Mock
+    private StudentRepository studentRepository;
     private StudentService underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new StudentService(studentRepository, courseRepository);
+        underTest = new StudentService(studentRepository);
     }
 
     @Test

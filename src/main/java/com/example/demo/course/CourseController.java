@@ -49,10 +49,5 @@ public class CourseController {
         courseService.updateCourse(courseId, name, amountOfPoints, maxNumberOfStudents, mandatory);
     }
 
-    @PutMapping
-    public void signStudent(
-            @RequestParam Long studentId,
-            @RequestParam String courseName) throws StudentDoesNotExistException, CourseDoesNotExistException{
-        courseService.signStudent(studentId, courseName);
-    }
+
 }
