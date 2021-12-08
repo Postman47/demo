@@ -4,7 +4,7 @@ import com.example.demo.course.Course;
 import com.example.demo.course.CourseRepository;
 import com.example.demo.course.exceptions.CourseAlreadyTakenException;
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
-import com.example.demo.course.exceptions.TooManyStudentsException;
+import com.example.demo.signing.exceptions.TooManyStudentsException;
 import com.example.demo.student.Student;
 import com.example.demo.student.StudentRepository;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
@@ -27,7 +27,7 @@ public class SigningService {
     }
 
     @Transactional
-    public void signStudent(Long studentId , String courseName){
+    public void signStudent(Long studentId , String courseName) throws CourseAlreadyTakenException, StudentDoesNotExistException, CourseDoesNotExistException, TooManyStudentsException{
 
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId));
         Course course = courseRepository.findCourseByName(courseName).orElseThrow(() -> new CourseDoesNotExistException(CourseDoesNotExistException.COURSE_DO_NOT_EXIST));

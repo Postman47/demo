@@ -3,7 +3,6 @@ package com.example.demo.course;
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
 import com.example.demo.course.exceptions.NameTakenException;
 
-import com.example.demo.student.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +24,13 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    public void addNewCourse(Course course) {
+    public void addNewCourse(Course course) throws NameTakenException{
         checkIfNameTaken(course);
         courseRepository.save(course);
 
     }
 
-    public void deleteCourse(Long studentId) {
+    public void deleteCourse(Long studentId) throws CourseDoesNotExistException{
         boolean exists = courseRepository.existsById(studentId);
         if(!exists){
             throw new CourseDoesNotExistException(CourseDoesNotExistException.COURSE_DO_NOT_EXIST + studentId);
@@ -40,7 +39,7 @@ public class CourseService {
     }
 
     @Transactional
-    public void updateCourse(Long courseId,String name, Integer amountOfPoints, Integer maxNumberOfStudents, Boolean mandatory) {
+    public void updateCourse(Long courseId,String name, Integer amountOfPoints, Integer maxNumberOfStudents, Boolean mandatory) throws CourseDoesNotExistException{
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new CourseDoesNotExistException(CourseDoesNotExistException.COURSE_DO_NOT_EXIST + courseId));
 
         if(name != null && name.length() > 0 && !course.getName().equals(name)){
@@ -61,7 +60,7 @@ public class CourseService {
 
 
 
-    public void checkIfNameTaken(Course course) {
+    public void checkIfNameTaken(Course course) throws NameTakenException{
         Optional<Course> courseOptional = courseRepository.findCourseByName(course.getName());
         if (courseOptional.isPresent()){
             throw new NameTakenException(NameTakenException.NAME_TAKEN_EXCEPTION);

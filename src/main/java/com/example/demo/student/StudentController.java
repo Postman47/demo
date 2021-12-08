@@ -4,6 +4,7 @@ package com.example.demo.student;
 
 import com.example.demo.course.Course;
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
+import com.example.demo.student.exceptions.EmailTakenException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,7 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerNewStudent(@RequestBody Student student) {
+    public ResponseEntity<String> registerNewStudent(@RequestBody Student student) throws EmailTakenException {
         Student addStudent = new Student(student.getName(),student.getEmail(),student.getDateOfBirth());
         studentService.addNewStudent(addStudent);
 
@@ -72,7 +73,7 @@ public class StudentController {
     public ResponseEntity<String> updateStudent(
             @PathVariable("studentId") Long studentId,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email) throws StudentDoesNotExistException{
+            @RequestParam(required = false) String email) throws StudentDoesNotExistException, EmailTakenException{
                 studentService.updateStudent(studentId, name, email);
 
                 Optional<Student> optionalStudent = studentService.getStudentRepository().findById(studentId);
@@ -85,7 +86,7 @@ public class StudentController {
 
 
     @GetMapping(path = "{studentId}")
-    public ResponseEntity<List<String>> getStudentCourses(@PathVariable Long studentId){
+    public ResponseEntity<List<String>> getStudentCourses(@PathVariable Long studentId) throws StudentDoesNotExistException{
         return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudentCourses(studentId));
     }
 }

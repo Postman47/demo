@@ -41,7 +41,7 @@ class StudentServiceTest {
     }
 
     @Test
-    void canAddNewStudent() {
+    void canAddNewStudent() throws EmailTakenException{
         //given
         Student student = new Student(
                 "Hanna",
@@ -61,7 +61,7 @@ class StudentServiceTest {
 
 
     @Test
-    void canDeleteStudent() {
+    void canDeleteStudent() throws StudentDoesNotExistException{
         //given
         given(studentRepository.existsById(1L)).willReturn(true);
 
@@ -75,7 +75,7 @@ class StudentServiceTest {
     }
 
     @Test
-    void willThrowWhenStudentDoesNotExists(){
+    void willThrowWhenStudentDoesNotExists() throws EmailTakenException{
 
         //given
         Student student = new Student(
@@ -92,7 +92,7 @@ class StudentServiceTest {
     }
 
     @Test
-    void canUpdateStudent() {
+    void canUpdateStudent() throws EmailTakenException, StudentDoesNotExistException{
         //given
         Student student = new Student(
                 "Hanna",

@@ -25,13 +25,13 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void addNewStudent(Student student) {
+    public void addNewStudent(Student student) throws EmailTakenException{
         checkIfEmailTaken(student);
         studentRepository.save(student);
 
     }
 
-    public void deleteStudent(Long studentId) {
+    public void deleteStudent(Long studentId) throws StudentDoesNotExistException{
         boolean exists = studentRepository.existsById(studentId);
         if(!exists){
             throw new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId);
@@ -40,7 +40,7 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateStudent(Long studentId, String name, String email) {
+    public void updateStudent(Long studentId, String name, String email) throws EmailTakenException, StudentDoesNotExistException {
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId));
 
         if(name != null && name.length() > 0 && !student.getName().equals(name)){
@@ -53,14 +53,14 @@ public class StudentService {
         }
     }
 
-    public void checkIfEmailTaken(Student student) {
+    public void checkIfEmailTaken(Student student) throws EmailTakenException{
         Optional<Student> studentOptional = studentRepository.findStudentByEmail(student.getEmail());
         if (studentOptional.isPresent()){
             throw new EmailTakenException(EmailTakenException.EMAIL_TAKEN_EXCEPTION);
         }
     }
 
-    public List<String> getStudentCourses(Long studentId){
+    public List<String> getStudentCourses(Long studentId) throws StudentDoesNotExistException{
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId));
 
         List<String> response = new ArrayList<>();

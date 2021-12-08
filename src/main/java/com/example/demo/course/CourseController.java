@@ -1,7 +1,7 @@
 package com.example.demo.course;
 
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
-import com.example.demo.student.exceptions.StudentDoesNotExistException;
+import com.example.demo.course.exceptions.NameTakenException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +24,12 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<List> getCourse(){
+    public ResponseEntity<List<Course>> getCourse(){
         return ResponseEntity.status(HttpStatus.OK).body(courseService.getCourses());
     }
 
     @PostMapping
-    public void registerCourse(@RequestBody Course course) {
+    public void registerCourse(@RequestBody Course course) throws NameTakenException {
         Course addCourse = new Course(course.getName(), course.getAmountOfPoints(), course.getMaxNumberOfStudents(), course.getMandatory());
         courseService.addNewCourse(addCourse);
     }

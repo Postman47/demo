@@ -1,5 +1,6 @@
 package com.example.demo.signing;
 
+import com.example.demo.course.exceptions.CourseAlreadyTakenException;
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class SigningController {
     @PutMapping
     public void signStudent(
             @RequestParam Long studentId,
-            @RequestParam String courseName) throws StudentDoesNotExistException, CourseDoesNotExistException {
+            @RequestParam String courseName) throws StudentDoesNotExistException, CourseDoesNotExistException, CourseAlreadyTakenException {
         signingService.signStudent(studentId, courseName);
     }
 }
