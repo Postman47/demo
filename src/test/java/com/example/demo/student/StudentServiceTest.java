@@ -24,24 +24,24 @@ import static org.mockito.Mockito.*;
 class StudentServiceTest {
 
     @Mock
-    private StudentRepository studentRepository;
-    private StudentService underTest;
+    private StudentRepository studentRepositoryMock;
+    private StudentService studentService;
 
     @BeforeEach
     void setUp() {
-        underTest = new StudentService(studentRepository);
+        studentService = new StudentService(studentRepositoryMock);
     }
 
     @Test
-    void canGetAllStudents() {
+    void getStudentsTest() {
         //when
-        underTest.getStudents();
+        studentService.getStudents();
         //then
-        verify(studentRepository).findAll();
+        verify(studentRepositoryMock).findAll();
     }
 
     @Test
-    void canAddNewStudent() throws EmailTakenException{
+    void addNewStudentTest() throws EmailTakenException{
         //given
         Student student = new Student(
                 "Hanna",
@@ -50,26 +50,26 @@ class StudentServiceTest {
         );
 
         //when
-        underTest.addNewStudent(student);
+        studentService.addStudent(student);
 
         //then
         ArgumentCaptor<Student> studentArgumentCaptor = ArgumentCaptor.forClass(Student.class);
-        verify(studentRepository).save(studentArgumentCaptor.capture());
+        verify(studentRepositoryMock).save(studentArgumentCaptor.capture());
         Student capturedStudent = studentArgumentCaptor.getValue();
         assertThat(capturedStudent).isEqualTo(student);
     }
 
 
     @Test
-    void canDeleteStudent() throws StudentDoesNotExistException{
+    void deleteStudentTest() throws StudentDoesNotExistException{
         //given
-        given(studentRepository.existsById(1L)).willReturn(true);
+        given(studentRepositoryMock.existsById(1L)).willReturn(true);
 
         //when
-        underTest.deleteStudent(1L);
+        studentService.deleteStudent(1L);
 
         //then
-        verify(studentRepository).deleteById(1L);
+        verify(studentRepositoryMock).deleteById(1L);
 
 
     }
@@ -84,15 +84,15 @@ class StudentServiceTest {
                 LocalDate.of(1993, Month.DECEMBER, 17)
         );
         //when
-        underTest.addNewStudent(student);
-        given(studentRepository.existsById(any())).willReturn(false);
+        studentService.addStudent(student);
+        given(studentRepositoryMock.existsById(any())).willReturn(false);
         //then
-        assertThatThrownBy(() -> underTest.deleteStudent(student.getSId())).hasMessageContaining(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + student.getSId());
-        verify(studentRepository, never()).deleteById(any());
+        assertThatThrownBy(() -> studentService.deleteStudent(student.getSId())).hasMessageContaining(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + student.getSId());
+        verify(studentRepositoryMock, never()).deleteById(any());
     }
 
     @Test
-    void canUpdateStudent() throws EmailTakenException, StudentDoesNotExistException{
+    void updateStudentTest() throws EmailTakenException, StudentDoesNotExistException{
         //given
         Student student = new Student(
                 "Hanna",
@@ -101,10 +101,10 @@ class StudentServiceTest {
         );
         //when
         Long idTest = 1L;
-        doReturn(Optional.of(student)).when(studentRepository).findById(idTest);
+        doReturn(Optional.of(student)).when(studentRepositoryMock).findById(idTest);
         String expectedName = "Emilia";
         String expectedEmail = "emilia12@hmail.com";
-        underTest.updateStudent(idTest,expectedName,expectedEmail);
+        studentService.updateStudent(idTest,expectedName,expectedEmail);
 
         //then
         assertThat(student.getEmail()).isEqualTo(expectedEmail);
@@ -121,9 +121,9 @@ class StudentServiceTest {
                 LocalDate.of(1993, Month.DECEMBER, 17)
         );
         //when
-        given(studentRepository.findStudentByEmail(student.getEmail())).willReturn(Optional.of(student));
+        given(studentRepositoryMock.findStudentByEmail(student.getEmail())).willReturn(Optional.of(student));
         //then
-        assertThatThrownBy(() -> underTest.checkIfEmailTaken(student)).hasMessageContaining(EmailTakenException.EMAIL_TAKEN_EXCEPTION);
+        assertThatThrownBy(() -> studentService.checkIfEmailTaken(student)).hasMessageContaining(EmailTakenException.EMAIL_TAKEN_EXCEPTION);
 
     }
 

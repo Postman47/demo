@@ -3,6 +3,7 @@ package com.example.demo.course;
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
 import com.example.demo.course.exceptions.NameTakenException;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Data
 public class CourseService {
 
     private final CourseRepository courseRepository;

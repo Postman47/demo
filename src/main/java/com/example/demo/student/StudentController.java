@@ -2,8 +2,6 @@ package com.example.demo.student;
 
 
 
-import com.example.demo.course.Course;
-import com.example.demo.course.exceptions.CourseDoesNotExistException;
 import com.example.demo.student.exceptions.EmailTakenException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +35,6 @@ public class StudentController {
         List<Student> response = studentService.getStudents();
         if (response.equals(null)) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, NO_CONTENT_EXCEPTION_MESSAGE);
-        }else if(response != studentService.getStudents()){
-            throw new ResponseStatusException(HttpStatus.PARTIAL_CONTENT, PARTIAL_CONTENT_EXCEPTION_MESSAGE);
         }else {
             return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudents());
         }
@@ -46,26 +42,27 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<String> registerNewStudent(@RequestBody Student student) throws EmailTakenException {
+    public ResponseEntity<String> registerStudent(@RequestBody Student student) throws EmailTakenException {
         Student addStudent = new Student(student.getName(),student.getEmail(),student.getDateOfBirth());
-        studentService.addNewStudent(addStudent);
+        studentService.addStudent(addStudent);
 
         Optional<Student> studentOptional = studentService.getStudentRepository().findStudentByEmail(student.getEmail());
         if(studentOptional.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, STUDENT_NOT_REGISTERED_MESSAGE);
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, FAILED_REGISTRATION_MESSAGE);
         }else{
-            return ResponseEntity.status(HttpStatus.OK).body(NEW_STUDENT_HAS_BEEN_REGISTERED_MESSAGE + addStudent.getName());
+            return ResponseEntity.status(HttpStatus.OK).body(REGISTERED_MESSAGE + addStudent.getName());
         }
     }
 
     @DeleteMapping(path = "{studentId}")
     public ResponseEntity<String> deleteStudent(@PathVariable("studentId") Long studentId) throws StudentDoesNotExistException {
         studentService.deleteStudent(studentId);
+
         Optional<Student> optionalStudent = studentService.getStudentRepository().findById(studentId);
         if(optionalStudent.isPresent()){
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, STUDENT_HAS_NOT_BEEN_DELETED_MESSAGE + studentId);
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, FAILED_DELETION_MESSAGE + studentId);
         }else{
-            return ResponseEntity.status(HttpStatus.OK).body(STUDENT_HAS_BEEN_DELETED_MESSAGE + studentId);
+            return ResponseEntity.status(HttpStatus.OK).body(DELETED_MESSAGE + studentId);
         }
     }
 
@@ -77,11 +74,16 @@ public class StudentController {
                 studentService.updateStudent(studentId, name, email);
 
                 Optional<Student> optionalStudent = studentService.getStudentRepository().findById(studentId);
-                if(optionalStudent.get().getName().equals(name) || optionalStudent.get().getEmail().equals(email)){
-                    return ResponseEntity.status(HttpStatus.OK).body(STUDENT_HAS_BEEN_UPDATED + studentId);
-                }else {
-                    throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, STUDENT_HAS_NOT_BEEN_UPDATED);
+                if(!name.equals(null) || !email.equals(null)){
+                    if(optionalStudent.get().getName().equals(name) || optionalStudent.get().getEmail().equals(email)){
+                        return ResponseEntity.status(HttpStatus.OK).body(UPDATED_INSTANCE_WITH_ID + studentId);
+                    }else {
+                        throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, ERROR_DID_NOT_UPDATE_INSTANCE_WITH_ID);
+                    }
+                }else{
+                    throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, NOT_ENOUGH_DATA);
                 }
+
     }
 
 

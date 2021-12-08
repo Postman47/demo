@@ -25,7 +25,7 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void addNewStudent(Student student) throws EmailTakenException{
+    public void addStudent(Student student) throws EmailTakenException{
         checkIfEmailTaken(student);
         studentRepository.save(student);
 
