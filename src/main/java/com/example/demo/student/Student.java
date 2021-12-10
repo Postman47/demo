@@ -1,6 +1,7 @@
 package com.example.demo.student;
 
 import com.example.demo.course.Course;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +39,7 @@ public class Student {
             joinColumns = @JoinColumn(name = "sId"),
             inverseJoinColumns = @JoinColumn(name = "cId")
     )
+    @JsonManagedReference
     private List<Course> courses = new ArrayList<>();
 
 

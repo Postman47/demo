@@ -5,9 +5,17 @@ import com.example.demo.course.exceptions.CourseDoesNotExistException;
 import com.example.demo.signing.exceptions.TooManyStudentsException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import static com.example.demo.Constant.*;
+
+@RestController
+@RequestMapping(path = signingPath)
 public class SigningController {
 
     private final SigningService signingService;
@@ -18,9 +26,9 @@ public class SigningController {
     }
 
     @PutMapping
-    public void signStudent(
+    public ResponseEntity<String> signStudent(
             @RequestParam Long studentId,
             @RequestParam String courseName) throws StudentDoesNotExistException, CourseDoesNotExistException, CourseAlreadyTakenException, TooManyStudentsException {
-        signingService.signStudent(studentId, courseName);
+        return signingService.signStudent(studentId, courseName);
     }
 }

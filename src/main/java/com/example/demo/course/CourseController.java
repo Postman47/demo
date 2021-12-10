@@ -73,12 +73,12 @@ public class CourseController {
         Optional<Course> optionalCourse = courseService.getCourseRepository().findById(courseId);
         if(!name.equals(null) || !amountOfPoints.equals(null) || !maxNumberOfStudents.equals(null) || !mandatory.equals(null)){
             if(optionalCourse.get().getName().equals(name) || optionalCourse.get().getAmountOfPoints().equals(amountOfPoints) || optionalCourse.get().getMaxNumberOfStudents().equals(maxNumberOfStudents) || optionalCourse.get().getMandatory().equals(mandatory)){
-                return ResponseEntity.status(HttpStatus.OK).body(UPDATED_INSTANCE_WITH_ID + courseId);
+                return ResponseEntity.status(HttpStatus.OK).body(UPDATED_INSTANCE_WITH_ID_MESSAGE + courseId);
             }else {
-                throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, ERROR_DID_NOT_UPDATE_INSTANCE_WITH_ID);
+                throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, ERROR_DID_NOT_UPDATE_INSTANCE_WITH_ID_MESSAGE);
             }
         }else{
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, NOT_ENOUGH_DATA);
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, NOT_ENOUGH_DATA_MESSAGE);
         }
     }
 

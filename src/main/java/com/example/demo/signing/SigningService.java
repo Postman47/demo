@@ -10,8 +10,13 @@ import com.example.demo.student.StudentRepository;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.example.demo.Constant.FAILED_SIGNING_MESSAGE;
+import static com.example.demo.Constant.SIGNED_MESSAGE;
 
 @Service
 @Data
@@ -27,7 +32,7 @@ public class SigningService {
     }
 
     @Transactional
-    public void signStudent(Long studentId , String courseName) throws CourseAlreadyTakenException, StudentDoesNotExistException, CourseDoesNotExistException, TooManyStudentsException{
+    public ResponseEntity<String> signStudent(Long studentId , String courseName) throws CourseAlreadyTakenException, StudentDoesNotExistException, CourseDoesNotExistException, TooManyStudentsException{
 
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId));
         Course course = courseRepository.findCourseByName(courseName).orElseThrow(() -> new CourseDoesNotExistException(CourseDoesNotExistException.COURSE_DO_NOT_EXIST));
@@ -35,6 +40,11 @@ public class SigningService {
             throw new TooManyStudentsException(TooManyStudentsException.TOO_MANY_STUDENTS);
         }else if(!student.getCourses().contains(course)){
             student.getCourses().add(course);
+            if(studentRepository.findById(studentId).get().getCourses().contains(courseRepository.findCourseByName(courseName))){
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(FAILED_SIGNING_MESSAGE + courseName);
+            }else{
+                return ResponseEntity.status(HttpStatus.OK).body(SIGNED_MESSAGE + courseName);
+            }
         }else{
             throw new CourseAlreadyTakenException(CourseAlreadyTakenException.COURSE_ALREADY_TAKEN);
         }

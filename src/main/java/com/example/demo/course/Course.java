@@ -1,6 +1,7 @@
 package com.example.demo.course;
 
 import com.example.demo.student.Student;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -26,6 +27,7 @@ public class Course {
     private Integer maxNumberOfStudents;
     private Boolean mandatory;
     @ManyToMany(mappedBy = "courses")
+    @JsonBackReference
     private Set<Student> student;
 
     public Course() {

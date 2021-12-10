@@ -32,38 +32,18 @@ public class StudentController {
     @GetMapping
     public ResponseEntity<List<Student>> getStudent(){
 
-        List<Student> response = studentService.getStudents();
-        if (response.equals(null)) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, NO_CONTENT_EXCEPTION_MESSAGE);
-        }else {
-            return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudents());
-        }
-
+        return studentService.getStudents();
     }
 
     @PostMapping
     public ResponseEntity<String> registerStudent(@RequestBody Student student) throws EmailTakenException {
         Student addStudent = new Student(student.getName(),student.getEmail(),student.getDateOfBirth());
-        studentService.addStudent(addStudent);
-
-        Optional<Student> studentOptional = studentService.getStudentRepository().findStudentByEmail(student.getEmail());
-        if(studentOptional.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, FAILED_REGISTRATION_MESSAGE);
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(REGISTERED_MESSAGE + addStudent.getName());
-        }
+        return studentService.addStudent(addStudent);
     }
 
     @DeleteMapping(path = "{studentId}")
     public ResponseEntity<String> deleteStudent(@PathVariable("studentId") Long studentId) throws StudentDoesNotExistException {
-        studentService.deleteStudent(studentId);
-
-        Optional<Student> optionalStudent = studentService.getStudentRepository().findById(studentId);
-        if(optionalStudent.isPresent()){
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, FAILED_DELETION_MESSAGE + studentId);
-        }else{
-            return ResponseEntity.status(HttpStatus.OK).body(DELETED_MESSAGE + studentId);
-        }
+        return studentService.deleteStudent(studentId);
     }
 
     @PutMapping(path = "{studentId}")
@@ -71,24 +51,12 @@ public class StudentController {
             @PathVariable("studentId") Long studentId,
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String email) throws StudentDoesNotExistException, EmailTakenException{
-                studentService.updateStudent(studentId, name, email);
-
-                Optional<Student> optionalStudent = studentService.getStudentRepository().findById(studentId);
-                if(!name.equals(null) || !email.equals(null)){
-                    if(optionalStudent.get().getName().equals(name) || optionalStudent.get().getEmail().equals(email)){
-                        return ResponseEntity.status(HttpStatus.OK).body(UPDATED_INSTANCE_WITH_ID + studentId);
-                    }else {
-                        throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, ERROR_DID_NOT_UPDATE_INSTANCE_WITH_ID);
-                    }
-                }else{
-                    throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, NOT_ENOUGH_DATA);
-                }
-
+                 return studentService.updateStudent(studentId, name, email);
     }
 
 
     @GetMapping(path = "{studentId}")
     public ResponseEntity<List<String>> getStudentCourses(@PathVariable Long studentId) throws StudentDoesNotExistException{
-        return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudentCourses(studentId));
+        return studentService.getStudentCourses(studentId);
     }
 }
