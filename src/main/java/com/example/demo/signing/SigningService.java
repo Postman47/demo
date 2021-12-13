@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import static com.example.demo.Constant.FAILED_SIGNING_MESSAGE;
 import static com.example.demo.Constant.SIGNED_MESSAGE;
@@ -41,9 +42,9 @@ public class SigningService {
         }else if(!student.getCourses().contains(course)){
             student.getCourses().add(course);
             if(studentRepository.findById(studentId).get().getCourses().contains(courseRepository.findCourseByName(courseName))){
-                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(FAILED_SIGNING_MESSAGE + courseName);
-            }else{
                 return ResponseEntity.status(HttpStatus.OK).body(SIGNED_MESSAGE + courseName);
+            }else{
+                throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, FAILED_SIGNING_MESSAGE + courseName);
             }
         }else{
             throw new CourseAlreadyTakenException(CourseAlreadyTakenException.COURSE_ALREADY_TAKEN);

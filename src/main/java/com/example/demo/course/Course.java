@@ -30,7 +30,7 @@ public class Course {
     private Integer maxNumberOfStudents;
     private Boolean mandatory;
     @ManyToMany(mappedBy = "courses")
-    @JsonView
+    @JsonIgnore
     private Set<Student> student;
 
     public Course() {
