@@ -134,8 +134,14 @@ class StudentServiceTest {
         //when
         given(studentRepositoryMock.existsById(any())).willReturn(false);
         //then
-        assertThatThrownBy(() -> studentService.deleteStudent(student.getSId())).hasMessageContaining(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + student.getSId());
-        verify(studentRepositoryMock, never()).deleteById(any());
+        Exception exception = assertThrows(Exception.class, () ->{
+            studentService.deleteStudent(1L);
+        });
+
+        String expectedMessage = StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID;
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
