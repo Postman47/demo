@@ -1,6 +1,8 @@
 package com.example.demo.student;
 
 import com.example.demo.course.Course;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.Getter;
@@ -39,7 +41,7 @@ public class Student {
             joinColumns = @JoinColumn(name = "sId"),
             inverseJoinColumns = @JoinColumn(name = "cId")
     )
-    @JsonManagedReference
+    @JsonIgnore
     private List<Course> courses = new ArrayList<>();
 
 

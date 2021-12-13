@@ -51,7 +51,7 @@ public class CourseService {
     public ResponseEntity<String> deleteCourse(Long courseId) throws CourseDoesNotExistException{
         boolean exists = courseRepository.existsById(courseId);
         if(!exists){
-            throw new CourseDoesNotExistException(CourseDoesNotExistException.COURSE_DO_NOT_EXIST + studentId);
+            throw new CourseDoesNotExistException(CourseDoesNotExistException.COURSE_DO_NOT_EXIST + courseId);
         }
         courseRepository.deleteById(courseId);
 

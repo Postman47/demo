@@ -27,10 +27,11 @@ public class StudentService {
     }
 
     public ResponseEntity<List<Student>> getStudents(){
-        if (studentRepository.findAll().equals(null)) {
+        List<Student> response = studentRepository.findAll();
+        if (Objects.isNull(response)) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, NO_CONTENT_EXCEPTION_MESSAGE);
         }else {
-            return ResponseEntity.status(HttpStatus.OK).body(studentRepository.findAll());
+            return ResponseEntity.status(HttpStatus.OK).body(response);
         }
     }
 
@@ -39,7 +40,7 @@ public class StudentService {
         studentRepository.save(student);
 
         Optional<Student> studentOptional = studentRepository.findStudentByEmail(student.getEmail());
-        if(studentOptional.isEmpty()){
+        if(Objects.isNull(studentOptional)){
             throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, FAILED_REGISTRATION_MESSAGE);
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(REGISTERED_MESSAGE + student.getName());
@@ -55,7 +56,7 @@ public class StudentService {
         studentRepository.deleteById(studentId);
 
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
-        if(optionalStudent.isPresent()){
+        if(Objects.isNull(optionalStudent)){
             throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, FAILED_DELETION_MESSAGE + studentId);
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(DELETED_MESSAGE + studentId);
@@ -76,7 +77,7 @@ public class StudentService {
         }
 
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
-        if(!name.equals(null) || !email.equals(null)){
+        if(!Objects.isNull(name) || !Objects.isNull(email)){
             if(optionalStudent.get().getName().equals(name) || optionalStudent.get().getEmail().equals(email)){
                 return ResponseEntity.status(HttpStatus.OK).body(UPDATED_INSTANCE_WITH_ID_MESSAGE + studentId);
             }else {
@@ -88,8 +89,7 @@ public class StudentService {
     }
 
     public void checkIfEmailTaken(Student student) throws EmailTakenException{
-        Optional<Student> studentOptional = studentRepository.findStudentByEmail(student.getEmail());
-        if (studentOptional.isPresent()){
+        if (studentRepository.existsByEmail(student.getEmail())){
             throw new EmailTakenException(EmailTakenException.EMAIL_TAKEN_EXCEPTION);
         }
     }
@@ -102,7 +102,7 @@ public class StudentService {
         for(Course c: student.getCourses()){
             response.add(c.getName());
         }
-        if(response.equals(null)){
+        if(response.equals(null) || response.size() <= 0){
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, NO_CONTENT_EXCEPTION_MESSAGE);
         }else{
             return ResponseEntity.status(HttpStatus.OK).body(response);
