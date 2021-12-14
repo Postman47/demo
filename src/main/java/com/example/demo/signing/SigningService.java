@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 import static com.example.demo.Constant.FAILED_SIGNING_MESSAGE;
 import static com.example.demo.Constant.SIGNED_MESSAGE;
 
@@ -41,7 +43,8 @@ public class SigningService {
             throw new TooManyStudentsException(TooManyStudentsException.TOO_MANY_STUDENTS);
         }else if(!student.getCourses().contains(course)){
             student.getCourses().add(course);
-            if(studentRepository.findById(studentId).get().getCourses().contains(courseRepository.findCourseByName(courseName))){
+            Optional<Student> optionalStudent = studentRepository.findById(studentId);
+            if(optionalStudent.get().getCourses().contains(courseRepository.findCourseByName(courseName))){
                 return ResponseEntity.status(HttpStatus.OK).body(SIGNED_MESSAGE + courseName);
             }else{
                 throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, FAILED_SIGNING_MESSAGE + courseName);

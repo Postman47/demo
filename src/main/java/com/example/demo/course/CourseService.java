@@ -84,7 +84,7 @@ public class CourseService {
         course.setMandatory(mandatory);
 
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
-        if(!Objects.isNull(name) || !Objects.isNull(amountOfPoints) || !Objects.isNull(maxNumberOfStudents) || !Objects.isNull(mandatory)){
+        if(!Objects.isNull(name) && !Objects.isNull(amountOfPoints) && !Objects.isNull(maxNumberOfStudents) && !Objects.isNull(mandatory)){
             if(optionalCourse.get().getName().equals(name) || optionalCourse.get().getAmountOfPoints().equals(amountOfPoints) || optionalCourse.get().getMaxNumberOfStudents().equals(maxNumberOfStudents) || optionalCourse.get().getMandatory().equals(mandatory)){
                 return ResponseEntity.status(HttpStatus.OK).body(UPDATED_INSTANCE_WITH_ID_MESSAGE + courseId);
             }else {
