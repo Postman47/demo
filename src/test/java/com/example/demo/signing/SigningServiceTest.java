@@ -57,7 +57,6 @@ public class SigningServiceTest {
 
     @Test
     void signStudentTest() throws StudentDoesNotExistException, CourseAlreadyTakenException, CourseDoesNotExistException, TooManyStudentsException {
-        // TODO: Make this test work
         //given
         Student student = new Student(
                 "Hanna",
@@ -75,27 +74,18 @@ public class SigningServiceTest {
                 20,
                 true
         );
-        Course course1 = new Course(
-                "Algebra",
-                4,
-                20,
-                true
-        );
+
         //when
         Set<Student> studentSet = new HashSet<>();
         studentSet.add(student1);
-        studentSet.add(student);
         course.setStudent(studentSet);
         doReturn(Optional.of(student)).when(studentRepositoryMock).findById(any());
         doReturn(Optional.of(course)).when(courseRepositoryMock).findCourseByName(course.getName());
-        doReturn(Optional.of(course1)).when(courseRepositoryMock).findCourseByName(course1.getName());
-//        doReturn(studentSetMock).when(courseMock).getStudent();
-//        doReturn(25).when(courseMock).getMaxNumberOfStudents();
-//        student.getCourses().add(course);
-//        doReturn(courseSetMock).when(studentMock).getCourses();
-        //doReturn(false).when(courseSetMock).contains(any());
+
         //then
         signingService.signStudent(1L, course.getName());
+
+        assertTrue(student.getCourses().contains(course));
     }
 
     @Test
