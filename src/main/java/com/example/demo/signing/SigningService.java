@@ -44,7 +44,8 @@ public class SigningService {
         }else if(!student.getCourses().contains(course)){
             student.getCourses().add(course);
             Optional<Student> optionalStudent = studentRepository.findById(studentId);
-            if(optionalStudent.get().getCourses().contains(courseRepository.findCourseByName(courseName))){
+            Optional<Course> optionalCourse = courseRepository.findCourseByName(courseName);
+            if(optionalStudent.get().getCourses().contains(optionalCourse.get())){
                 return ResponseEntity.status(HttpStatus.OK).body(SIGNED_MESSAGE + courseName);
             }else{
                 throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, FAILED_SIGNING_MESSAGE + courseName);
