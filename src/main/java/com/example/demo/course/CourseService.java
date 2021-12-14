@@ -77,15 +77,15 @@ public class CourseService {
             course.setAmountOfPoints(amountOfPoints);
         }
 
-        if(amountOfPoints != null && maxNumberOfStudents > 0 && !course.getMaxNumberOfStudents().equals(maxNumberOfStudents)){
+        if(maxNumberOfStudents != null && maxNumberOfStudents > 0 && !course.getMaxNumberOfStudents().equals(maxNumberOfStudents)){
             course.setMaxNumberOfStudents(maxNumberOfStudents);
         }
 
         course.setMandatory(mandatory);
 
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
-        if(!Objects.isNull(name) && !Objects.isNull(amountOfPoints) && !Objects.isNull(maxNumberOfStudents) && !Objects.isNull(mandatory)){
-            if(optionalCourse.get().getName().equals(name) || optionalCourse.get().getAmountOfPoints().equals(amountOfPoints) || optionalCourse.get().getMaxNumberOfStudents().equals(maxNumberOfStudents) || optionalCourse.get().getMandatory().equals(mandatory)){
+        if(!Objects.isNull(name) || !Objects.isNull(amountOfPoints) || !Objects.isNull(maxNumberOfStudents) || !Objects.isNull(mandatory)){
+            if(optionalCourse.get().getName().equals(name) || optionalCourse.get().getAmountOfPoints().equals(amountOfPoints) || optionalCourse.get().getMaxNumberOfStudents().equals(maxNumberOfStudents) ){
                 return ResponseEntity.status(HttpStatus.OK).body(UPDATED_INSTANCE_WITH_ID_MESSAGE + courseId);
             }else {
                 throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, ERROR_DID_NOT_UPDATE_INSTANCE_WITH_ID_MESSAGE);

@@ -77,7 +77,7 @@ public class StudentService {
         }
 
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
-        if(!Objects.isNull(name) && !Objects.isNull(email)){
+        if(!Objects.isNull(name) || !Objects.isNull(email)){
             if(optionalStudent.get().getName().equals(name) || optionalStudent.get().getEmail().equals(email)){
                 return ResponseEntity.status(HttpStatus.OK).body(UPDATED_INSTANCE_WITH_ID_MESSAGE + studentId);
             }else {
