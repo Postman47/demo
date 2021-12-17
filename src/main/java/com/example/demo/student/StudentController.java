@@ -36,9 +36,11 @@ public class StudentController {
     }
 
     @PostMapping
+
     public ResponseEntity<String> registerStudent(@RequestBody Student student) throws EmailTakenException {
         Student addStudent = new Student(student.getName(),student.getEmail(),student.getDateOfBirth());
         return studentService.addStudent(addStudent);
+
     }
 
     @DeleteMapping(path = "{studentId}")
