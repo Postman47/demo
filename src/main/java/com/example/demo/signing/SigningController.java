@@ -2,15 +2,13 @@ package com.example.demo.signing;
 
 import com.example.demo.course.exceptions.CourseAlreadyTakenException;
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
+import com.example.demo.signing.exceptions.StudentNotSignedForcourseException;
 import com.example.demo.signing.exceptions.TooManyStudentsException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.example.demo.Constant.*;
 
@@ -30,5 +28,12 @@ public class SigningController {
             @RequestParam Long studentId,
             @RequestParam String courseName) throws StudentDoesNotExistException, CourseDoesNotExistException, CourseAlreadyTakenException, TooManyStudentsException {
         return signingService.signStudent(studentId, courseName);
+    }
+
+    @PutMapping(path = "{studentId}")
+    public ResponseEntity<String> resignStudent(
+            @PathVariable("studentId") Long studentId,
+            @RequestParam String courseName) throws StudentDoesNotExistException, CourseDoesNotExistException, StudentNotSignedForcourseException {
+        return signingService.resignStudent(studentId, courseName);
     }
 }

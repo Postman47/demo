@@ -14,4 +14,6 @@ public class Constant {
     public static final String NOT_ENOUGH_DATA_MESSAGE = "There is not enough data to run this operation";
     public static final String FAILED_SIGNING_MESSAGE = "Error, failure during signing student for course ";
     public static final String SIGNED_MESSAGE = "Signed student for course ";
+    public static final String FAILED_RESIGNING_MESSAGE = "Error, failure during resigning from course ";
+    public static final String RESIGNED_MESSAGE = " resigned from ";
 }

@@ -4,6 +4,7 @@ import com.example.demo.course.Course;
 import com.example.demo.course.CourseRepository;
 import com.example.demo.course.exceptions.CourseAlreadyTakenException;
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
+import com.example.demo.signing.exceptions.StudentNotSignedForcourseException;
 import com.example.demo.signing.exceptions.TooManyStudentsException;
 import com.example.demo.student.Student;
 import com.example.demo.student.StudentRepository;
@@ -18,8 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
-import static com.example.demo.Constant.FAILED_SIGNING_MESSAGE;
-import static com.example.demo.Constant.SIGNED_MESSAGE;
+import static com.example.demo.Constant.*;
 
 @Service
 @Data
@@ -53,6 +53,22 @@ public class SigningService {
         }else{
             throw new CourseAlreadyTakenException(CourseAlreadyTakenException.COURSE_ALREADY_TAKEN);
         }
+    }
 
+    @Transactional
+    public ResponseEntity<String> resignStudent(Long studentId, String courseName) throws StudentDoesNotExistException, CourseDoesNotExistException, StudentNotSignedForcourseException {
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new StudentDoesNotExistException(StudentDoesNotExistException.ERROR_THERE_IS_NO_STUDENT_WITH_ID + studentId));
+        Course course = courseRepository.findCourseByName(courseName).orElseThrow(() -> new CourseDoesNotExistException(CourseDoesNotExistException.COURSE_DO_NOT_EXIST));
+        if(!student.getCourses().contains(course)){
+            throw new StudentNotSignedForcourseException(StudentNotSignedForcourseException.NOT_SIGNED + student.getName());
+        }else{
+            student.getCourses().remove(course);
+            Optional<Student> optionalStudent = studentRepository.findById(studentId);
+            if(optionalStudent.get().getCourses().contains(course)){
+                throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, FAILED_RESIGNING_MESSAGE + courseName);
+            }else {
+                return ResponseEntity.status(HttpStatus.OK).body(student.getName() + RESIGNED_MESSAGE + course.getName());
+            }
+        }
     }
 }
