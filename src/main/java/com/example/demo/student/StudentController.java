@@ -2,23 +2,26 @@ package com.example.demo.student;
 
 
 
+import com.example.demo.student.exceptions.EmailTakenException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.List;
+import java.util.Optional;
 
-import static com.example.demo.student.StudentController.apiPath;
+import static com.example.demo.Constant.*;
+
 
 @RestController
-@RequestMapping(path = apiPath)
+@RequestMapping(path = studentPath)
 public class StudentController {
 
     private final StudentService studentService;
-    public static final String apiPath = "api/v1/student";
 
     @Autowired
     public StudentController(StudentService studentService) {
@@ -27,30 +30,35 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<List> getStudent(){
+    public ResponseEntity<List<Student>> getStudent(){
 
-        return ResponseEntity.status(HttpStatus.OK).body(studentService.getStudents());
-
+        return studentService.getStudents();
     }
 
     @PostMapping
-    public void registerNewStudent(@RequestBody Student student) {
-        Student addedStudent = new Student(student.getName(), student.getEmail(), student.getDateOfBirth());
-        studentService.addNewStudent(addedStudent);
+
+    public ResponseEntity<String> registerStudent(@RequestBody Student student) throws EmailTakenException {
+        Student addStudent = new Student(student.getName(),student.getEmail(),student.getDateOfBirth());
+        return studentService.addStudent(addStudent);
+
     }
 
     @DeleteMapping(path = "{studentId}")
-    public void deleteStudent(@PathVariable("studentId") Long studentId) throws StudentDoesNotExistException {
-        studentService.deleteStudent(studentId);
+    public ResponseEntity<String> deleteStudent(@PathVariable("studentId") Long studentId) throws StudentDoesNotExistException {
+        return studentService.deleteStudent(studentId);
     }
 
     @PutMapping(path = "{studentId}")
-    public void updateStudent(
+    public ResponseEntity<String> updateStudent(
             @PathVariable("studentId") Long studentId,
             @RequestParam(required = false) String name,
-            @RequestParam(required = false) String email) throws StudentDoesNotExistException{
-                studentService.updateStudent(studentId, name, email);
+            @RequestParam(required = false) String email) throws StudentDoesNotExistException, EmailTakenException{
+                 return studentService.updateStudent(studentId, name, email);
     }
 
 
+    @GetMapping(path = "{studentId}")
+    public ResponseEntity<List<String>> getStudentCourses(@PathVariable Long studentId) throws StudentDoesNotExistException{
+        return studentService.getStudentCourses(studentId);
+    }
 }

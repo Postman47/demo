@@ -1,7 +1,7 @@
 package com.example.demo.student.exceptions;
 
 
-public class EmailTakenException extends RuntimeException{
+public class EmailTakenException extends Exception{
 
     public static final String EMAIL_TAKEN_EXCEPTION = "Error email arleady taken";
 
