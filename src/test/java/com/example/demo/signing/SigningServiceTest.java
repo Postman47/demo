@@ -5,6 +5,7 @@ import com.example.demo.course.CourseRepository;
 import com.example.demo.course.CourseService;
 import com.example.demo.course.exceptions.CourseAlreadyTakenException;
 import com.example.demo.course.exceptions.CourseDoesNotExistException;
+import com.example.demo.signing.exceptions.StudentNotSignedForcourseException;
 import com.example.demo.signing.exceptions.TooManyStudentsException;
 import com.example.demo.student.Student;
 import com.example.demo.student.StudentRepository;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.example.demo.Constant.FAILED_RESIGNING_MESSAGE;
 import static com.example.demo.Constant.FAILED_SIGNING_MESSAGE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -46,7 +48,7 @@ public class SigningServiceTest {
     @Mock
     private Set<Student> studentSetMock;
     @Mock
-    private List<Course> courseSetMock;
+    private Set<Course> courseSetMock;
 
 
     @BeforeEach
@@ -77,8 +79,11 @@ public class SigningServiceTest {
 
         //when
         Set<Student> studentSet = new HashSet<>();
-        studentSet.add(student1);
+        Set<Course> courseSet = new HashSet<>();
+        studentSet.add(student);
+        courseSet.add(course);
         course.setStudent(studentSet);
+        student.setCourses(courseSet);
         doReturn(Optional.of(student)).when(studentRepositoryMock).findById(any());
         doReturn(Optional.of(course)).when(courseRepositoryMock).findCourseByName(course.getName());
 
@@ -152,6 +157,72 @@ public class SigningServiceTest {
         });
 
         String expectedMessage = CourseAlreadyTakenException.COURSE_ALREADY_TAKEN;
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void resignStudentTest() throws StudentDoesNotExistException, CourseDoesNotExistException, StudentNotSignedForcourseException {
+        //given
+        Student student = new Student(
+                "Hanna",
+                "hanna23@gmail.com",
+                LocalDate.of(1993, Month.DECEMBER, 17)
+        );
+        Course course = new Course(
+                "Fizyka",
+                4,
+                20,
+                true
+        );
+
+        //when
+        Set<Course> courseSet = new HashSet<>();
+        courseSet.add(course);
+        student.setCourses(courseSet);
+        doReturn(Optional.of(student)).when(studentRepositoryMock).findById(any());
+        doReturn(Optional.of(course)).when(courseRepositoryMock).findCourseByName(course.getName());
+
+        //then
+        signingService.resignStudent(1L, course.getName());
+
+        assertTrue(!student.getCourses().contains(course));
+    }
+
+    @Test
+    void throwWhenStudentNotSigned_resignStudentTest(){
+        //when
+        doReturn(Optional.of(studentMock)).when(studentRepositoryMock).findById(any());
+        doReturn(Optional.of(courseMock)).when(courseRepositoryMock).findCourseByName(any());
+        doReturn(courseSetMock).when(studentMock).getCourses();
+        doReturn(false).when(courseSetMock).contains(any());
+
+        //then
+        Exception exception = assertThrows(Exception.class, () ->{
+            signingService.resignStudent(1L, "Fizyka");
+        });
+
+        String expectedMessage = StudentNotSignedForcourseException.NOT_SIGNED;
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void throwWhenDidNotResign_resignStudentTest(){
+        //when
+        doReturn(Optional.of(studentMock)).when(studentRepositoryMock).findById(any());
+        doReturn(Optional.of(courseMock)).when(courseRepositoryMock).findCourseByName(any());
+        doReturn(courseSetMock).when(studentMock).getCourses();
+        doReturn(true).when(courseSetMock).contains(any());
+
+        //then
+        Exception exception = assertThrows(ResponseStatusException.class, () ->{
+            signingService.resignStudent(1L, "Fizyka");
+        });
+
+        String expectedMessage = FAILED_RESIGNING_MESSAGE;
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));

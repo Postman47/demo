@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
@@ -42,7 +44,7 @@ public class Student {
             inverseJoinColumns = @JoinColumn(name = "cId")
     )
     @JsonIgnore
-    private List<Course> courses = new ArrayList<>();
+    private Set<Course> courses;
 
 
     public Student() {
@@ -55,6 +57,19 @@ public class Student {
         this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.age = Period.between(dateOfBirth, LocalDate.now()).getYears();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return Objects.equals(sId, student.sId) && Objects.equals(name, student.name) && Objects.equals(email, student.email) && Objects.equals(dateOfBirth, student.dateOfBirth) && Objects.equals(age, student.age);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sId, name, email, dateOfBirth, age);
     }
 
     @Override
