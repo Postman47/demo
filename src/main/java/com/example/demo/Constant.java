@@ -16,4 +16,6 @@ public class Constant {
     public static final String SIGNED_MESSAGE = "Signed student for course ";
     public static final String FAILED_RESIGNING_MESSAGE = "Error, failure during resigning from course ";
     public static final String RESIGNED_MESSAGE = " resigned from ";
+    public static final String FINISHED_COURSE_MESSAGE = " finished ";
+    public static final String FAILED_FINISHING_COURSE_MESSAGE = "Error, failure during finishing course";
 }

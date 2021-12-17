@@ -10,6 +10,7 @@ import com.example.demo.signing.exceptions.TooManyStudentsException;
 import com.example.demo.student.Student;
 import com.example.demo.student.StudentRepository;
 import com.example.demo.student.StudentService;
+import com.example.demo.student.exceptions.CourseAlreadyFinishedException;
 import com.example.demo.student.exceptions.EmailTakenException;
 import com.example.demo.student.exceptions.StudentDoesNotExistException;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,7 +59,7 @@ public class SigningServiceTest {
     }
 
     @Test
-    void signStudentTest() throws StudentDoesNotExistException, CourseAlreadyTakenException, CourseDoesNotExistException, TooManyStudentsException {
+    void signStudentTest() throws StudentDoesNotExistException, CourseAlreadyTakenException, CourseDoesNotExistException, TooManyStudentsException, CourseAlreadyFinishedException {
         //given
         Student student = new Student(
                 "Hanna",

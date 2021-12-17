@@ -1,18 +1,13 @@
 package com.example.demo.student;
 
 import com.example.demo.course.Course;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -45,6 +40,16 @@ public class Student {
     )
     @JsonIgnore
     private Set<Course> courses;
+
+//    @ManyToMany
+//    @JoinTable(
+//            name = "student_course",
+//            joinColumns = @JoinColumn(name = "sId"),
+//            inverseJoinColumns = @JoinColumn(name = "cId")
+//    )
+//    @JsonIgnore
+//    private Set<String> finishedCourses;
+
 
 
     public Student() {
