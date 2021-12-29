@@ -38,10 +38,10 @@ public class SigningController {
         return signingService.resignStudent(studentId, courseName);
     }
 
-    @PutMapping(path = "finish")
-    public ResponseEntity<String> finishCourse(
-            @RequestParam String courseName,
-            @RequestParam Long studentId) throws StudentDoesNotExistException, CourseDoesNotExistException, CourseAlreadyFinishedException, StudentNotSignedForcourseException {
-        return signingService.finishCourse(studentId,courseName);
-    }
+//    @PutMapping(path = "finish")
+//    public ResponseEntity<String> finishCourse(
+//            @RequestParam String courseName,
+//            @RequestParam Long studentId) throws StudentDoesNotExistException, CourseDoesNotExistException, CourseAlreadyFinishedException, StudentNotSignedForcourseException {
+//        return signingService.finishCourse(studentId,courseName);
+//    }
 }
