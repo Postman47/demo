@@ -11,7 +11,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table
+@Table(name = "student_course", schema = "my_default_schema")
 @Data
 public class Course {
     @Id
